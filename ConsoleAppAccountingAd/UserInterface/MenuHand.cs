@@ -91,6 +91,10 @@ namespace ConsoleAppAccountingAd.UserInterface
                     case "4":
                         DeleteClient();
                         break;
+                    default:
+                        Console.WriteLine("Неверный ввод. Нажмите любую клавишу...");
+                        Console.ReadKey();
+                        break;
                 }
             }
         }
@@ -177,6 +181,10 @@ namespace ConsoleAppAccountingAd.UserInterface
                     case "5":
                         DeletePlatform();
                         break ;
+                    default:
+                        Console.WriteLine("Неверный ввод. Нажмите любую клавишу...");
+                        Console.ReadKey();
+                        break;
                 }
             }
         }
@@ -259,6 +267,10 @@ namespace ConsoleAppAccountingAd.UserInterface
                     case "4":
                         RedactTitleCampain();
                         break;
+                    default:
+                        Console.WriteLine("Неверный ввод. Нажмите любую клавишу...");
+                        Console.ReadKey();
+                        break;
                 }
             }
         }
@@ -291,6 +303,46 @@ namespace ConsoleAppAccountingAd.UserInterface
             Console.Clear();
         }
         private void AnalitikSubMenu()
+        {
+            while (true) 
+            {
+                Console.Clear();
+                Console.WriteLine("=======================================================");
+                Console.WriteLine("===СИСТЕМА УЧЕТА РЕКЛАМЫ В АГЕНСТВЕ===");
+                Console.WriteLine("========================================================");
+                Console.WriteLine("4.1 Подсчет дохода за определенный месяц");
+                Console.WriteLine("4.2 Топ клиенты");
+                Console.WriteLine("4.3 Самые прибыльные рекламные площадки");
+                string choice = Console.ReadLine();
+                if (choice == "0") break;
+                switch (choice)
+                {
+                    case "1":
+                        CalculatIncomMonth();
+                        break;
+                    case "2":
+                        TopCliensts();
+                        break;
+                    case "3":
+                        MostProfitAdPlatform();
+                        break;
+                    default:
+                        Console.WriteLine("Неверный ввод. Нажмите любую клавишу...");
+                        Console.ReadKey();
+                        break;
+                }
+
+            }
+        }
+        private void CalculatIncomMonth()
+        {
+            Console.Clear();
+        }
+        private void TopCliensts()
+        {
+            Console.Clear();
+        }
+        private void MostProfitAdPlatform()
         {
             Console.Clear();
         }
