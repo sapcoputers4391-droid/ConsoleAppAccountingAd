@@ -29,6 +29,7 @@ namespace ConsoleAppAccountingAd.UserInterface
                 Console.WriteLine("2. Управление рекламными площадками");
                 Console.WriteLine("3. Учет рекламных компаний(заказов)");
                 Console.WriteLine("4. Аналитика");
+                Console.WriteLine("5. Открытие ЭТ MS Excel");
                 Console.WriteLine("---------------------------------------------------------");
                 Console.WriteLine("0. Сохранить и выйти");
                 Console.WriteLine("==========================================================");
@@ -47,6 +48,13 @@ namespace ConsoleAppAccountingAd.UserInterface
                         break;
                     case "4":
                         AnalitikSubMenu();
+                        break;
+                    case "5":
+                        string fileName = "AdAgency_Report.xlsx";
+                        Console.WriteLine("Генерация отчета и открытие Excel...");
+                        ExcelManager excel = new ExcelManager();
+                        excel.ExportOther(_controller.Clients, _controller.Platforms, _controller.Campains, fileName);
+                        ExcelManager.OpenInExcel(fileName);
                         break;
                     case "0":
                         Console.WriteLine("Сохранение данных... До свидания!");
@@ -135,8 +143,68 @@ namespace ConsoleAppAccountingAd.UserInterface
             Console.ReadKey();
         }
         private void RedactInfoClient()
-        {
+        { 
             Console.Clear();
+            Console.Write("Введите ID клиента, которого хотите изменить: ");
+
+            if (int.TryParse(Console.ReadLine(), out int id))
+            {
+                var client = _controller.GetClientById(id);
+
+                if (client != null)
+                {
+                    Console.WriteLine($"\nРедактирование клиента: {client.NameCompany}");
+                    Console.WriteLine("1. Изменить название компании");
+                    Console.WriteLine("2. Изменить Фамилию");
+                    Console.WriteLine("3. Изменить Имя");
+                    Console.WriteLine("4. Изменить Телефон");
+                    Console.WriteLine("5. Изменить Email");
+                    Console.WriteLine("0. Отмена");
+                    Console.Write("\nВыберите поле: ");
+
+                    string fieldChoice = Console.ReadLine();
+                    switch (fieldChoice)
+                    {
+                        case "1":
+                            Console.Write("Новое название: ");
+                            client.NameCompany = Console.ReadLine();
+                            break;
+                        case "2":
+                            Console.Write("Новая фамилия: ");
+                            client.Surname = Console.ReadLine();
+                            break;
+                        case "3":
+                            Console.Write("Новое имя: ");
+                            client.Name = Console.ReadLine();
+                            break;
+                        case "4":
+                            Console.Write("Новый телефон: ");
+                            client.PhoneNumber = Console.ReadLine();
+                            break;
+                        case "5":
+                            Console.Write("Новый Email: ");
+                            client.Email = Console.ReadLine();
+                            break;
+                        case "0":
+                            return;
+                        default:
+                            Console.WriteLine("Неверный выбор.");
+                            break;
+                    }
+                    Console.WriteLine("\nДанные успешно обновлены!");
+                }
+                else
+                {
+                    Console.WriteLine("Клиент с таким ID не найден.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Ошибка: введите числовой ID.");
+            }
+
+            Console.WriteLine("\nНажмите любую клавишу для продолжения...");
+            Console.ReadKey();
         }
         private void DeleteClient()
         {
@@ -205,7 +273,7 @@ namespace ConsoleAppAccountingAd.UserInterface
             int id = int.Parse(Console.ReadLine());
             Console.WriteLine("Введите название платформы:");
             string title = Console.ReadLine();
-            Console.WriteLine(" тип носителя: ");
+            Console.WriteLine("Введите тип носителя: ");
             string category = Console.ReadLine();
             Console.WriteLine("Введите стоимость размещения за один день: ");
             decimal bpd = decimal.Parse(Console.ReadLine());

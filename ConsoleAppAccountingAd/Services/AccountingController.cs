@@ -34,6 +34,10 @@ namespace ConsoleAppAccountingAd.Services
                 Console.WriteLine("Клиент не найден.");
             }
         }
+        public Client GetClientById(int id)
+        { 
+            return Clients.FirstOrDefault(c => c.Id == id);
+        }
         public void AddAdPlatform(AdPlatform platform)
         {
             if(Platforms.Exists(y => y.Id == platform.Id))
