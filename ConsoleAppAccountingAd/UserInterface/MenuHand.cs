@@ -11,10 +11,12 @@ namespace ConsoleAppAccountingAd.UserInterface
     internal class MenuHand
     {
         private readonly AccountingController _controller;
+        private readonly ExcelManager _excelManager;
 
         public MenuHand(AccountingController controller)
         {
             _controller = controller;
+            _excelManager = new ExcelManager();
         }
         public void MainLoop()
         {
@@ -50,7 +52,7 @@ namespace ConsoleAppAccountingAd.UserInterface
                         AnalitikSubMenu();
                         break;
                     case "5":
-                        string fileName = "AdAgency_Report.xlsx";
+                        string fileName = @"..\..\..\AdAgency_Report.xlsx";
                         Console.WriteLine("Генерация отчета и открытие Excel...");
                         ExcelManager excel = new ExcelManager();
                         excel.ExportOther(_controller.Clients, _controller.Platforms, _controller.Campains, fileName);
@@ -58,6 +60,15 @@ namespace ConsoleAppAccountingAd.UserInterface
                         break;
                     case "0":
                         Console.WriteLine("Сохранение данных... До свидания!");
+                        string filePath = @"..\..\..\AdAgency_Report.xlsx";
+                        _excelManager.ExportOther(
+                            _controller.Clients,
+                            _controller.Platforms,
+                            _controller.Campains,
+                            filePath
+                        );
+
+                        Console.WriteLine("Готово! Файл сохранен в папке проекта.");
                         return;
                     default:
                         Console.WriteLine("Неверный ввод. Нажмите любую клавишу...");
@@ -224,8 +235,7 @@ namespace ConsoleAppAccountingAd.UserInterface
                 Console.WriteLine("2.1 Показать доступные площадки");
                 Console.WriteLine("2.2 Добавить новую площадку");
                 Console.WriteLine("2.3 Изменить стоимость размещения");
-                Console.WriteLine("2.4 Сменить статус доступности");
-                Console.WriteLine("2.5 Удалить площадку");
+                Console.WriteLine("2.4 Удалить площадку");
                 Console.WriteLine("-----------------------------------------------------------");
                 Console.WriteLine("0. Вернуться в главное меню");
                 Console.WriteLine("========================================================");
@@ -244,9 +254,6 @@ namespace ConsoleAppAccountingAd.UserInterface
                         RedactInfoPlatform();
                         break;
                     case "4":
-                        RedactStatusAccess();
-                        break;
-                    case "5":
                         DeletePlatform();
                         break ;
                     default:
@@ -291,10 +298,67 @@ namespace ConsoleAppAccountingAd.UserInterface
         private void RedactInfoPlatform()
         {
             Console.Clear();
-        }
-        private void RedactStatusAccess()
-        {
-            Console.Clear();
+            Console.Write("Введите ID платформы, которою хотите изменить: ");
+
+            if (int.TryParse(Console.ReadLine(), out int id))
+            {
+                var platform  = _controller.GetPlatformById(id);
+
+                if (platform != null)
+                {
+                    Console.WriteLine($"\nРедактирование платформы: {platform.Title}");
+                    Console.WriteLine("1. Изменить название палатформы");
+                    Console.WriteLine("2. Изменить тип носителя");
+                    Console.WriteLine("3. Изменить стоимость размещение за один день");
+                    Console.WriteLine("4. Изменить приблизительный охват людей");
+                    Console.WriteLine("5. Изменить состояние доступа");
+                    Console.WriteLine("0. Отмена");
+                    Console.Write("\nВыберите поле: ");
+
+                    string fieldChoice = Console.ReadLine();
+                    switch (fieldChoice)
+                    {
+                        case "1":
+                            Console.Write("Новое название: ");
+                            platform.Title = Console.ReadLine();
+                            break;
+                        case "2":
+                            Console.Write("Новый тип носителя: ");
+                            platform.Category = Console.ReadLine();
+                            break;
+                        case "3":
+                            Console.Write("Новая цена: ");
+                            platform.BasePriceDay = decimal.Parse(Console.ReadLine());
+                            break;
+                        case "4":
+                            Console.Write("Новый охват: ");
+                            platform.ApproximateReach = int.Parse(Console.ReadLine());
+                            break;
+                        case "5":
+                            Console.Write("Доступна? (1 - Да, 0 - Нет): ");
+                            string status = Console.ReadLine();
+                            platform.IsAvailable = (status == "1");
+                            break;
+                        case "0":
+                            return;
+                        default:
+                            Console.WriteLine("Неверный выбор.");
+                            break;
+                    }
+                    Console.WriteLine("\nДанные успешно обновлены!");
+                }
+                else
+                {
+                    Console.WriteLine("Платформа с таким ID не найдена.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Ошибка: введите числовой ID.");
+            }
+
+            Console.WriteLine("\nНажмите любую клавишу для продолжения...");
+            Console.ReadKey();
         }
         private void DeletePlatform()
         {
@@ -333,7 +397,7 @@ namespace ConsoleAppAccountingAd.UserInterface
                         DeleteCampain();
                         break;
                     case "4":
-                        RedactTitleCampain();
+                        RedactInfoCampain();
                         break;
                     default:
                         Console.WriteLine("Неверный ввод. Нажмите любую клавишу...");
@@ -357,7 +421,20 @@ namespace ConsoleAppAccountingAd.UserInterface
             Console.Clear();
             Console.WriteLine("Введите Id");
             int id = int.Parse(Console.ReadLine());
-
+            Console.WriteLine();
+            int clientId = int.Parse(Console.ReadLine());
+            Console.WriteLine();
+            int platformId = int.Parse(Console.ReadLine());
+            Console.WriteLine() ;
+            DateTime startDate = DateTime.Parse(Console.ReadLine());
+            Console.WriteLine();
+            DateTime endDate = DateTime.Parse(Console.ReadLine());
+            Console.WriteLine();
+            string status = Console.ReadLine();
+            Console.WriteLine();
+            string notes = Console.ReadLine();
+            AdCampain NewCampain = new AdCampain(id, clientId, platformId, startDate, endDate, status, notes);
+            _controller.AddAdCampain(NewCampain);
         }
         private void DeleteCampain()
         {
@@ -366,9 +443,64 @@ namespace ConsoleAppAccountingAd.UserInterface
             int id = int.Parse(Console.ReadLine());
             _controller.RemoveAdCampain(id);
         }
-        private void RedactTitleCampain()
+        private void RedactInfoCampain()
         {
             Console.Clear();
+            Console.Write("Введите ID заказы, которою хотите изменить: ");
+
+            if (int.TryParse(Console.ReadLine(), out int id))
+            {
+                var campain = _controller.GetCampainById(id);
+
+                if (campain != null)
+                {
+                    Console.WriteLine($"\nРедактирование заказа: {campain.Id}");
+                    Console.WriteLine("1. Изменить дату начала заказа");
+                    Console.WriteLine("2. Изменить дату окончания заказа");
+                    Console.WriteLine("3. Изменить статус");
+                    Console.WriteLine("4. Изменить пожелания клиента");
+                    Console.WriteLine("0. Отмена");
+                    Console.Write("\nВыберите поле: ");
+
+                    string fieldChoice = Console.ReadLine();
+                    switch (fieldChoice)
+                    {
+                        case "1":
+                            Console.Write("Новоя дата начала: ");
+                            campain.StartDate = DateTime.Parse(Console.ReadLine());
+                            break;
+                        case "2":
+                            Console.Write("Новая конечная дата: ");
+                            campain.EndDate = DateTime.Parse(Console.ReadLine());
+                            break;
+                        case "3":
+                            Console.Write("Новый статус: ");
+                            campain.Status = Console.ReadLine();
+                            break;
+                        case "4":
+                            Console.Write("Новые пожелания клиента: ");
+                            campain.Notes = Console.ReadLine();
+                            break;
+                        case "0":
+                            return;
+                        default:
+                            Console.WriteLine("Неверный выбор.");
+                            break;
+                    }
+                    Console.WriteLine("\nДанные успешно обновлены!");
+                }
+                else
+                {
+                    Console.WriteLine("Платформа с таким ID не найдена.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Ошибка: введите числовой ID.");
+            }
+
+            Console.WriteLine("\nНажмите любую клавишу для продолжения...");
+            Console.ReadKey();
         }
         private void AnalitikSubMenu()
         {

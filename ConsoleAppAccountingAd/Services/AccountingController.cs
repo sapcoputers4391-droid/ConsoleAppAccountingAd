@@ -61,6 +61,10 @@ namespace ConsoleAppAccountingAd.Services
                 Console.WriteLine("Рекламная площадка не найдена");
             }
         }
+        public AdPlatform GetPlatformById(int id)
+        {
+            return Platforms.FirstOrDefault(p => p.Id == id);
+        }
         public void AddAdCampain(AdCampain adCampain)
         {
             if(Campains.Exists(z => z.Id == adCampain.Id))
@@ -83,6 +87,10 @@ namespace ConsoleAppAccountingAd.Services
             {
                 Console.WriteLine("Заказ не найден");
             }
+        }
+        public AdCampain GetCampainById(int id)
+        {
+            return Campains.FirstOrDefault(s => s.Id == id);
         }
     }
 }

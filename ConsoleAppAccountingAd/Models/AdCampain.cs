@@ -54,7 +54,7 @@ namespace ConsoleAppAccountingAd.Models
         }
         public void Info()
         {
-            Console.WriteLine($"[{Id}] / Индификационный номер клиента: {ClientId} / Индификационный номер площадки: {PlatformId} / Продолжительность рекламной компании: {StartDate}-{EndDate} {Days} / Текущее состояние: {Status} / Примечания клиента: {Notes}");
+            Console.WriteLine($"[{Id}] / Индификационный номер клиента: {ClientId} / Индификационный номер площадки: {PlatformId} / Продолжительность рекламной компании: {StartDate}-{EndDate} {Days()} / Текущее состояние: {Status} / Примечания клиента: {Notes}");
         }
     }
 }
