@@ -31,7 +31,7 @@ namespace ConsoleAppAccountingAd.Services
                 worksheet.Cell(2, 1).Value = "Id";
                 worksheet.Cell(2, 2).Value = "Название компании клиента";
                 worksheet.Cell(2, 3).Value = "Фамилия клиента";
-                worksheet.Cell(2, 4).Value = "Имя клиентиа";
+                worksheet.Cell(2, 4).Value = "Имя клиента";
                 worksheet.Cell(2, 5).Value = "номер мобильного телефона";
                 worksheet.Cell(2, 6).Value = "Email клиента";
 
@@ -167,6 +167,24 @@ namespace ConsoleAppAccountingAd.Services
                                 row.Cell(11).GetValue<decimal>(),
                                 row.Cell(12).GetValue<int>(),
                                 isAvail
+                            ));
+                        }
+                    }
+                    var cIdCell = row.Cell(15); 
+                    if (!cIdCell.IsEmpty() && cIdCell.TryGetValue(out int cId))
+                    {
+                        if (!controller.Campains.Any(camp => camp.Id == cId))
+                        {
+                            DateTime start = row.Cell(18).GetDateTime();
+                            DateTime end = row.Cell(19).GetDateTime();
+
+                            controller.AddAdCampain(new AdCampain(
+                                cId,
+                                row.Cell(16).GetValue<int>(),    
+                                row.Cell(17).GetValue<int>(),     
+                                start,
+                                end,         
+                                row.Cell(22).GetString()           
                             ));
                         }
                     }

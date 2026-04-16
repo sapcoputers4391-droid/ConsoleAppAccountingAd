@@ -421,19 +421,17 @@ namespace ConsoleAppAccountingAd.UserInterface
             Console.Clear();
             Console.WriteLine("Введите Id");
             int id = int.Parse(Console.ReadLine());
-            Console.WriteLine();
+            Console.WriteLine("Введите Id клиента");
             int clientId = int.Parse(Console.ReadLine());
-            Console.WriteLine();
+            Console.WriteLine("Введите Id платформы");
             int platformId = int.Parse(Console.ReadLine());
-            Console.WriteLine() ;
+            Console.WriteLine("Введите дату начала") ;
             DateTime startDate = DateTime.Parse(Console.ReadLine());
-            Console.WriteLine();
+            Console.WriteLine("Введите дату конца");
             DateTime endDate = DateTime.Parse(Console.ReadLine());
-            Console.WriteLine();
-            string status = Console.ReadLine();
-            Console.WriteLine();
+            Console.WriteLine("Введите пожелания клиента");
             string notes = Console.ReadLine();
-            AdCampain NewCampain = new AdCampain(id, clientId, platformId, startDate, endDate, status, notes);
+            AdCampain NewCampain = new AdCampain(id, clientId, platformId, startDate, endDate, notes);
             _controller.AddAdCampain(NewCampain);
         }
         private void DeleteCampain()
@@ -457,8 +455,7 @@ namespace ConsoleAppAccountingAd.UserInterface
                     Console.WriteLine($"\nРедактирование заказа: {campain.Id}");
                     Console.WriteLine("1. Изменить дату начала заказа");
                     Console.WriteLine("2. Изменить дату окончания заказа");
-                    Console.WriteLine("3. Изменить статус");
-                    Console.WriteLine("4. Изменить пожелания клиента");
+                    Console.WriteLine("3. Изменить пожелания клиента");
                     Console.WriteLine("0. Отмена");
                     Console.Write("\nВыберите поле: ");
 
@@ -474,10 +471,6 @@ namespace ConsoleAppAccountingAd.UserInterface
                             campain.EndDate = DateTime.Parse(Console.ReadLine());
                             break;
                         case "3":
-                            Console.Write("Новый статус: ");
-                            campain.Status = Console.ReadLine();
-                            break;
-                        case "4":
                             Console.Write("Новые пожелания клиента: ");
                             campain.Notes = Console.ReadLine();
                             break;
@@ -510,21 +503,17 @@ namespace ConsoleAppAccountingAd.UserInterface
                 Console.WriteLine("=======================================================");
                 Console.WriteLine("===СИСТЕМА УЧЕТА РЕКЛАМЫ В АГЕНСТВЕ===");
                 Console.WriteLine("========================================================");
-                Console.WriteLine("4.1 Подсчет дохода за определенный месяц");
-                Console.WriteLine("4.2 Топ клиенты");
-                Console.WriteLine("4.3 Самые прибыльные рекламные площадки");
+                Console.WriteLine("4.1 Топ клиенты");
+                Console.WriteLine("-----------------------------------------------------------");
+                Console.WriteLine("0. Вернуться в главное меню");
+                Console.WriteLine("========================================================");
+                Console.WriteLine("Выберите действие: ");
                 string choice = Console.ReadLine();
                 if (choice == "0") break;
                 switch (choice)
                 {
                     case "1":
-                        CalculatIncomMonth();
-                        break;
-                    case "2":
                         TopCliensts();
-                        break;
-                    case "3":
-                        MostProfitAdPlatform();
                         break;
                     default:
                         Console.WriteLine("Неверный ввод. Нажмите любую клавишу...");
@@ -534,17 +523,13 @@ namespace ConsoleAppAccountingAd.UserInterface
 
             }
         }
-        private void CalculatIncomMonth()
-        {
-            Console.Clear();
-        }
         private void TopCliensts()
         {
             Console.Clear();
-        }
-        private void MostProfitAdPlatform()
-        {
-            Console.Clear();
+            Console.WriteLine("Топ клиенты");
+            _controller.TopClent();
+            Console.WriteLine("\nНажмите любую клавишу для возврата...");
+            Console.ReadKey();
         }
     }
 }

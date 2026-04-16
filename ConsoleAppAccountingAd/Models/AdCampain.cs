@@ -11,10 +11,9 @@ namespace ConsoleAppAccountingAd.Models
         public int PlatformId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public string Status {  get; set; }
         public string Notes { get; set; }
         public AdCampain() { }
-        public AdCampain(int id, int clientId, int platformId, DateTime startDate, DateTime endDate, string status, string notes)
+        public AdCampain(int id, int clientId, int platformId, DateTime startDate, DateTime endDate, string notes)
         {
             Id = id;
             ClientId = clientId;
@@ -29,7 +28,6 @@ namespace ConsoleAppAccountingAd.Models
                 StartDate = startDate;
                 EndDate = endDate;
             }
-            Status = status;
             Notes = notes;
         }
         public int Days()
@@ -51,6 +49,23 @@ namespace ConsoleAppAccountingAd.Models
         {
             DateTime today = DateTime.Now;
             return today >= StartDate && today <= EndDate;
+        }
+        public string Status
+        {
+            get
+            {
+                DateTime today = DateTime.Now;
+                if (today >= StartDate && today <= EndDate)
+                {
+                    return "Активен";
+                }
+                if (today < StartDate)
+                {
+                    return "Ожидание";
+                }
+                return "Завершён";
+            }
+            set { }
         }
         public void Info()
         {

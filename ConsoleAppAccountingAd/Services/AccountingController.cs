@@ -38,6 +38,28 @@ namespace ConsoleAppAccountingAd.Services
         { 
             return Clients.FirstOrDefault(c => c.Id == id);
         }
+        public void TopClent()
+        {
+            foreach (var client in Clients)
+            {
+                decimal Top = 0;
+                foreach (var campains in Campains)
+                {
+                    if (campains.ClientId == client.Id)
+                    {
+                        var platform = GetPlatformById(campains.PlatformId);
+                        if (platform != null)
+                        {
+                            Top += campains.ResultSum(platform);
+                        }
+                    }
+                }
+                if (Top > 0)
+                {
+                    Console.WriteLine($"Клиент: {client.Id} {client.Name} {client.Surname} / Сумма его заказов: {Top} бел.руб.");
+                }
+            }
+        }
         public void AddAdPlatform(AdPlatform platform)
         {
             if(Platforms.Exists(y => y.Id == platform.Id))
