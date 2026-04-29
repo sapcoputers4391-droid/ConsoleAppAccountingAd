@@ -67,11 +67,14 @@ namespace ConsoleAppAccountingAd.UserInterface
                             _controller.Campains,
                             filePath
                         );
-
+                        Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Готово! Файл сохранен в папке проекта.");
+                        Console.ResetColor();
                         return;
                     default:
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Неверный ввод. Нажмите любую клавишу...");
+                        Console.ResetColor();
                         Console.ReadKey();
                         break;
                 }
@@ -111,7 +114,9 @@ namespace ConsoleAppAccountingAd.UserInterface
                         DeleteClient();
                         break;
                     default:
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Неверный ввод. Нажмите любую клавишу...");
+                        Console.ResetColor();
                         Console.ReadKey();
                         break;
                 }
@@ -130,8 +135,8 @@ namespace ConsoleAppAccountingAd.UserInterface
         private void AddClient()
         {
             Console.Clear();
-            Console.Write("Введите ID: ");
-            int id = int.Parse(Console.ReadLine());
+            int id = _controller.GetNextClientId();
+            Console.WriteLine($"Назначенный ID: {id}");
 
             Console.Write("Введите название компании: ");
             string company = Console.ReadLine();
@@ -199,19 +204,27 @@ namespace ConsoleAppAccountingAd.UserInterface
                         case "0":
                             return;
                         default:
+                            Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("Неверный выбор.");
+                            Console.ResetColor();
                             break;
                     }
+                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("\nДанные успешно обновлены!");
+                    Console.ResetColor  ();
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Клиент с таким ID не найден.");
+                    Console.ResetColor();
                 }
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Ошибка: введите числовой ID.");
+                Console.ResetColor();
             }
 
             Console.WriteLine("\nНажмите любую клавишу для продолжения...");
@@ -234,7 +247,7 @@ namespace ConsoleAppAccountingAd.UserInterface
                 Console.WriteLine("========================================================");
                 Console.WriteLine("2.1 Показать доступные площадки");
                 Console.WriteLine("2.2 Добавить новую площадку");
-                Console.WriteLine("2.3 Изменить стоимость размещения");
+                Console.WriteLine("2.3 Редактировать площадку");
                 Console.WriteLine("2.4 Удалить площадку");
                 Console.WriteLine("-----------------------------------------------------------");
                 Console.WriteLine("0. Вернуться в главное меню");
@@ -257,7 +270,9 @@ namespace ConsoleAppAccountingAd.UserInterface
                         DeletePlatform();
                         break ;
                     default:
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Неверный ввод. Нажмите любую клавишу...");
+                        Console.ResetColor();
                         Console.ReadKey();
                         break;
                 }
@@ -276,8 +291,8 @@ namespace ConsoleAppAccountingAd.UserInterface
         private void AddNewPlatform()
         {
             Console.Clear();
-            Console.WriteLine("Введите Id: ");
-            int id = int.Parse(Console.ReadLine());
+            int id = _controller.GetNextPlatformId();
+            Console.WriteLine($"Назначенный ID: {id}");
             Console.WriteLine("Введите название платформы:");
             string title = Console.ReadLine();
             Console.WriteLine("Введите тип носителя: ");
@@ -342,19 +357,27 @@ namespace ConsoleAppAccountingAd.UserInterface
                         case "0":
                             return;
                         default:
+                            Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("Неверный выбор.");
+                            Console.ResetColor();
                             break;
                     }
+                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("\nДанные успешно обновлены!");
+                    Console.ResetColor();
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Платформа с таким ID не найдена.");
+                    Console.ResetColor();
                 }
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Ошибка: введите числовой ID.");
+                Console.ResetColor();
             }
 
             Console.WriteLine("\nНажмите любую клавишу для продолжения...");
@@ -400,7 +423,9 @@ namespace ConsoleAppAccountingAd.UserInterface
                         RedactInfoCampain();
                         break;
                     default:
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Неверный ввод. Нажмите любую клавишу...");
+                        Console.ResetColor();
                         Console.ReadKey();
                         break;
                 }
@@ -419,20 +444,22 @@ namespace ConsoleAppAccountingAd.UserInterface
         private void AddNewCampain()
         {
             Console.Clear();
-            Console.WriteLine("Введите Id");
-            int id = int.Parse(Console.ReadLine());
+            int id = _controller.GetNextAdCampainId();
+            Console.WriteLine($"Назначенный ID: {id}");
             Console.WriteLine("Введите Id клиента");
             int clientId = int.Parse(Console.ReadLine());
             Console.WriteLine("Введите Id платформы");
             int platformId = int.Parse(Console.ReadLine());
             Console.WriteLine("Введите дату начала") ;
-            DateTime startDate = DateTime.Parse(Console.ReadLine());
+            DateTime startDate = ReadDate("Дата начала");
             Console.WriteLine("Введите дату конца");
-            DateTime endDate = DateTime.Parse(Console.ReadLine());
+            DateTime endDate = ReadDate("Дата конца");
             Console.WriteLine("Введите пожелания клиента");
             string notes = Console.ReadLine();
             AdCampain NewCampain = new AdCampain(id, clientId, platformId, startDate, endDate, notes);
             _controller.AddAdCampain(NewCampain);
+            Console.WriteLine("Нажмите любую клавишу...");
+            Console.ReadKey();
         }
         private void DeleteCampain()
         {
@@ -477,19 +504,27 @@ namespace ConsoleAppAccountingAd.UserInterface
                         case "0":
                             return;
                         default:
+                            Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("Неверный выбор.");
+                            Console.ResetColor();
                             break;
                     }
+                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("\nДанные успешно обновлены!");
+                    Console.ResetColor();
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Платформа с таким ID не найдена.");
+                    Console.ResetColor();
                 }
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Ошибка: введите числовой ID.");
+                Console.ResetColor();
             }
 
             Console.WriteLine("\nНажмите любую клавишу для продолжения...");
@@ -504,6 +539,8 @@ namespace ConsoleAppAccountingAd.UserInterface
                 Console.WriteLine("===СИСТЕМА УЧЕТА РЕКЛАМЫ В АГЕНСТВЕ===");
                 Console.WriteLine("========================================================");
                 Console.WriteLine("4.1 Топ клиенты");
+                Console.WriteLine("4.2 Подсчет суммы за месяц");
+                Console.WriteLine("4.3 Топ самых длинных заказов");
                 Console.WriteLine("-----------------------------------------------------------");
                 Console.WriteLine("0. Вернуться в главное меню");
                 Console.WriteLine("========================================================");
@@ -515,8 +552,16 @@ namespace ConsoleAppAccountingAd.UserInterface
                     case "1":
                         TopCliensts();
                         break;
+                    case "2":
+                        ShowMonth();
+                        break;
+                    case"3":
+                        ShowLongestOrders(); 
+                        break;
                     default:
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Неверный ввод. Нажмите любую клавишу...");
+                        Console.ResetColor();
                         Console.ReadKey();
                         break;
                 }
@@ -530,6 +575,48 @@ namespace ConsoleAppAccountingAd.UserInterface
             _controller.TopClent();
             Console.WriteLine("\nНажмите любую клавишу для возврата...");
             Console.ReadKey();
+        }
+        private void ShowMonth()
+        {
+            Console.Clear();
+            Console.WriteLine("Выручка за месяц");
+
+            Console.Write("Введите номер месяца (1-12): ");
+            int month = int.Parse(Console.ReadLine());
+
+            Console.Write("Введите год (например, 2026): ");
+            int year = int.Parse(Console.ReadLine());
+
+            decimal revenue = _controller.GetMonthlyRevenue(month, year);
+            Console.WriteLine($"Итого выручка за {month:D2}.{year}: {revenue:F2} бел. руб.");
+
+            Console.WriteLine("\nНажмите любую клавишу для выхода...");
+            Console.ReadKey();
+        }
+        private void ShowLongestOrders()
+        {
+            Console.Clear();
+            _controller.ShowLongestCampains();
+
+            Console.WriteLine("\nНажмите любую клавишу...");
+            Console.ReadKey();
+        }
+        private DateTime ReadDate(string message)
+        {
+            while (true)
+            {
+                try
+                {
+                    Console.Write($"{message} (дд.мм.гггг): ");
+                    return DateTime.Parse(Console.ReadLine());
+                }
+                catch
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Ошибка! Используйте формат: 30.05.2026");
+                    Console.ResetColor();
+                }
+            }
         }
     }
 }

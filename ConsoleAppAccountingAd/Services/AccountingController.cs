@@ -60,6 +60,19 @@ namespace ConsoleAppAccountingAd.Services
                 }
             }
         }
+        public int GetNextClientId()
+        {
+            if (Clients.Count == 0) return 1;
+            int maxId = 0;
+            foreach (var client in Clients)
+            {
+                if (client.Id > maxId)
+                {
+                    maxId = client.Id;
+                }
+            }
+            return maxId + 1;
+        }
         public void AddAdPlatform(AdPlatform platform)
         {
             if(Platforms.Exists(y => y.Id == platform.Id))
@@ -83,6 +96,20 @@ namespace ConsoleAppAccountingAd.Services
                 Console.WriteLine("Рекламная площадка не найдена");
             }
         }
+        public int GetNextPlatformId()
+        {
+            if (Platforms.Count == 0) return 1;
+
+            int maxId = 0;
+            foreach (var platform in Platforms)
+            {
+                if (platform.Id > maxId)
+                {
+                    maxId = platform.Id;
+                }
+            }
+            return maxId + 1;
+        }
         public AdPlatform GetPlatformById(int id)
         {
             return Platforms.FirstOrDefault(p => p.Id == id);
@@ -96,6 +123,20 @@ namespace ConsoleAppAccountingAd.Services
             }
             Campains.Add(adCampain);
             Console.WriteLine("Заказ успешно добавлен!");
+        }
+        public int GetNextAdCampainId()
+        {
+            if (Campains.Count == 0) return 1;
+
+            int maxId = 0;
+            foreach (var campain in Campains)
+            {
+                if (campain.Id > maxId)
+                {
+                    maxId = campain.Id;
+                }
+            }
+            return maxId + 1;
         }
         public void RemoveAdCampain(int id)
         {
@@ -113,6 +154,44 @@ namespace ConsoleAppAccountingAd.Services
         public AdCampain GetCampainById(int id)
         {
             return Campains.FirstOrDefault(s => s.Id == id);
+        }
+        public decimal GetMonthlyRevenue(int month, int year)
+        {
+            decimal totalRevenue = 0;
+
+            foreach (var campaign in Campains)
+            {
+                if (campaign.StartDate.Month == month && campaign.StartDate.Year == year)
+                {
+                    var platform = GetPlatformById(campaign.PlatformId);
+                    if (platform != null)
+                    {
+                        totalRevenue += campaign.ResultSum(platform);
+                    }
+                }
+            }
+            return totalRevenue;
+        }
+        public void ShowLongestCampains()
+        {
+            if (Campains.Count == 0)
+            {
+                Console.WriteLine("Заказов пока нет.");
+                return;
+            }
+            var sortedCampains = new List<AdCampain>(Campains);
+
+            sortedCampains.Sort((x, y) => y.Days().CompareTo(x.Days()));
+
+            Console.WriteLine("Самые долгие заказы");
+
+            int count = Math.Min(3, sortedCampains.Count);
+            for (int i = 0; i < count; i++)
+            {
+                var c = sortedCampains[i];
+                Console.WriteLine($"{i + 1}. Заказ №{c.Id} | Длительность: {c.Days()} дней");
+                Console.WriteLine($"   Даты: {c.StartDate:dd.MM.yyyy} - {c.EndDate:dd.MM.yyyy}");
+            }
         }
     }
 }
