@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ConsoleAppAccountingAd.Models
 {
-    internal class Client
+    public class Client
     {
         public int Id { get; set; }
         public string NameCompany { get; set; }

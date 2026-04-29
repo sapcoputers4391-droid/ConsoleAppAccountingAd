@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ConsoleAppAccountingAd.Models
 {
-    internal class AdCampain
+    public class AdCampain
     {
         public int Id { get; set; }
         public int ClientId { get; set; }

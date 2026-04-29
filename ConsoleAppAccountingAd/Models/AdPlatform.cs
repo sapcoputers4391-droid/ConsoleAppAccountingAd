@@ -5,7 +5,7 @@ using System.Threading.Channels;
 
 namespace ConsoleAppAccountingAd.Models
 {
-    internal class AdPlatform
+    public class AdPlatform
     {
         public int Id { get; set; }
         public string Title { get; set; }

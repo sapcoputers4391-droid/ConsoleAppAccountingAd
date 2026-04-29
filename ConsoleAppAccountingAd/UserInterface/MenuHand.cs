@@ -520,7 +520,7 @@ namespace ConsoleAppAccountingAd.UserInterface
                 Console.WriteLine("3.2 Журнал всех заказов");
                 Console.WriteLine("3.3 Удалить заказ");
                 Console.WriteLine("3.4 Поиск определенного заказа (по ID)");
-                Console.WriteLine("3.5 Изменить примечания к заказу");
+                Console.WriteLine("3.5 Редактирование заказа");
                 Console.WriteLine("-----------------------------------------------------------");
                 Console.WriteLine("0. Вернуться в главное меню");
                 Console.WriteLine("========================================================");
