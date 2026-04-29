@@ -92,7 +92,8 @@ namespace ConsoleAppAccountingAd.UserInterface
                 Console.WriteLine("1.1. Просмотреть список всех клиентов");
                 Console.WriteLine("1.2. Добавить нового клиента");
                 Console.WriteLine("1.3. Редактировать данные клиента (по ID)");
-                Console.WriteLine("1.4. Удалить клиента из базы");
+                Console.WriteLine("1.4. Поиск определенного клиента (по ID)");
+                Console.WriteLine("1.5. Удалить клиента из базы");
                 Console.WriteLine("-----------------------------------------------------------");
                 Console.WriteLine("0. Вернуться в главное меню");
                 Console.WriteLine("========================================================");
@@ -111,7 +112,10 @@ namespace ConsoleAppAccountingAd.UserInterface
                         RedactInfoClient();
                         break;
                     case "4":
-                        DeleteClient();
+                        SearchClientById();
+                        break;
+                    case "5":
+                        RemoveClient();
                         break;
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;
@@ -156,6 +160,38 @@ namespace ConsoleAppAccountingAd.UserInterface
             _controller.AddClient(newClient);
 
             Console.WriteLine("Нажмите любую клавишу...");
+            Console.ReadKey();
+        }
+        private void SearchClientById()
+        {
+            Console.Clear();
+            Console.Write("Введите ID для поиска: ");
+            if (!int.TryParse(Console.ReadLine(), out int id))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Ошибка! Нужно ввести число.");
+                Console.ResetColor();
+                Console.ReadKey();
+                return;
+            }
+            Client client = _controller.GetClientById(id);
+
+            if (client != null)
+            {
+                Console.WriteLine($"ID: {client.Id}");
+                Console.WriteLine($"Компания: {client.NameCompany}");
+                Console.WriteLine($"ФИО: {client.Surname} {client.Name}");
+                Console.WriteLine($"Телефон: {client.PhoneNumber}");
+                Console.WriteLine($"Email: {client.Email}");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\nКлиент с ID {id} не найден в базе.");
+                Console.ResetColor();
+            }
+
+            Console.WriteLine("\nНажмите любую клавишу...");
             Console.ReadKey();
         }
         private void RedactInfoClient()
@@ -230,12 +266,34 @@ namespace ConsoleAppAccountingAd.UserInterface
             Console.WriteLine("\nНажмите любую клавишу для продолжения...");
             Console.ReadKey();
         }
-        private void DeleteClient()
+        private void RemoveClient()
         {
             Console.Clear();
-            Console.Write("Введите ID: ");
-            int id = int.Parse(Console.ReadLine());
-            _controller.RemoveClient(id);
+            Console.Write("Введите ID клиента для полного удаления: ");
+            if (!int.TryParse(Console.ReadLine(), out int id))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Ошибка: введите числовой ID!");
+                Console.ResetColor();
+                Console.ReadKey();
+                return;
+            }
+            bool result = _controller.DeleteClientWithOrders(id);
+
+            if (result)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"\nУспешно! Клиент {id} и все его заказы удалены из системы.");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\nОшибка: Клиент с ID {id} не найден.");
+            }
+
+            Console.ResetColor();
+            Console.WriteLine("\nНажмите любую клавишу для продолжения...");
+            Console.ReadKey();
         }
         private void AdPlatformSubMenu()
         {
@@ -248,7 +306,8 @@ namespace ConsoleAppAccountingAd.UserInterface
                 Console.WriteLine("2.1 Показать доступные площадки");
                 Console.WriteLine("2.2 Добавить новую площадку");
                 Console.WriteLine("2.3 Редактировать площадку");
-                Console.WriteLine("2.4 Удалить площадку");
+                Console.WriteLine("2.4 Поиск платформы (по ID)");
+                Console.WriteLine("2.5 Удалить площадку");
                 Console.WriteLine("-----------------------------------------------------------");
                 Console.WriteLine("0. Вернуться в главное меню");
                 Console.WriteLine("========================================================");
@@ -267,7 +326,10 @@ namespace ConsoleAppAccountingAd.UserInterface
                         RedactInfoPlatform();
                         break;
                     case "4":
-                        DeletePlatform();
+                        SearchPlatformById();
+                        break;
+                    case "5":
+                        RemovePlatform();
                         break ;
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;
@@ -308,6 +370,40 @@ namespace ConsoleAppAccountingAd.UserInterface
             _controller.AddAdPlatform(newPlatform);
 
             Console.WriteLine("Нажмите любую клавишу...");
+            Console.ReadKey();
+        }
+        private void SearchPlatformById()
+        {
+            Console.Clear();
+            Console.Write("Введите ID площадки для поиска: ");
+            if (!int.TryParse(Console.ReadLine(), out int id))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Ошибка! Нужно ввести число.");
+                Console.ResetColor();
+                Console.ReadKey();
+                return;
+            }
+
+            var platform = _controller.GetPlatformById(id);
+
+            if (platform != null)
+            {
+                Console.WriteLine($"ID: {platform.Id}");
+                Console.WriteLine($"Название: {platform.Title}");
+                Console.WriteLine($"Тип: {platform.Category}");
+                Console.WriteLine($"Цена за день: {platform.BasePriceDay} бел. руб.");
+                Console.WriteLine($"Охват: {platform.ApproximateReach} чел.");
+                Console.WriteLine($"Доступность: {(platform.IsAvailable ? "Да" : "Нет")}");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\nПлощадка с ID {id} не найдена.");
+                Console.ResetColor();
+            }
+
+            Console.WriteLine("\nНажмите любую клавишу...");
             Console.ReadKey();
         }
         private void RedactInfoPlatform()
@@ -383,12 +479,34 @@ namespace ConsoleAppAccountingAd.UserInterface
             Console.WriteLine("\nНажмите любую клавишу для продолжения...");
             Console.ReadKey();
         }
-        private void DeletePlatform()
+        private void RemovePlatform()
         {
             Console.Clear();
-            Console.Write("Введите ID: ");
-            int id = int.Parse(Console.ReadLine());
-            _controller.RemoveAdPlaform(id);
+            Console.Write("Введите ID площадки для удаления: ");
+            if (!int.TryParse(Console.ReadLine(), out int id))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Ошибка: введите числовой ID!");
+                Console.ResetColor();
+                Console.ReadKey();
+                return;
+            }
+            bool result = _controller.DeletePlatformWithOrders(id);
+
+            if (result)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"\nУспешно! Площадка {id} и все заказы на ней удалены.");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\nОшибка: Площадка с ID {id} не найдена.");
+            }
+
+            Console.ResetColor();
+            Console.WriteLine("\nНажмите любую клавишу для продолжения...");
+            Console.ReadKey();
         }
         private void AdCampainSubMenu()
         {
@@ -401,7 +519,8 @@ namespace ConsoleAppAccountingAd.UserInterface
                 Console.WriteLine("3.1 Оформить новый заказ");
                 Console.WriteLine("3.2 Журнал всех заказов");
                 Console.WriteLine("3.3 Удалить заказ");
-                Console.WriteLine("3.4 Изменить примечания к заказу");
+                Console.WriteLine("3.4 Поиск определенного заказа (по ID)");
+                Console.WriteLine("3.5 Изменить примечания к заказу");
                 Console.WriteLine("-----------------------------------------------------------");
                 Console.WriteLine("0. Вернуться в главное меню");
                 Console.WriteLine("========================================================");
@@ -420,6 +539,9 @@ namespace ConsoleAppAccountingAd.UserInterface
                         DeleteCampain();
                         break;
                     case "4":
+                        SearchCampainById();
+                        break;
+                    case "5":
                         RedactInfoCampain();
                         break;
                     default:
@@ -459,6 +581,41 @@ namespace ConsoleAppAccountingAd.UserInterface
             AdCampain NewCampain = new AdCampain(id, clientId, platformId, startDate, endDate, notes);
             _controller.AddAdCampain(NewCampain);
             Console.WriteLine("Нажмите любую клавишу...");
+            Console.ReadKey();
+        }
+        private void SearchCampainById()
+        {
+            Console.Clear();
+            Console.Write("Введите ID заказа для поиска: ");
+            if (!int.TryParse(Console.ReadLine(), out int id))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Ошибка! Нужно ввести число.");
+                Console.ResetColor();
+                Console.ReadKey();
+                return;
+            }
+
+            var camp = _controller.GetCampainById(id);
+
+            if (camp != null)
+            {
+                Console.WriteLine($"ID Заказа: {camp.Id}");
+                Console.WriteLine($"ID Клиента: {camp.ClientId}");
+                Console.WriteLine($"ID Площадки: {camp.PlatformId}");
+                Console.WriteLine($"Период: {camp.StartDate:dd.MM.yyyy} - {camp.EndDate:dd.MM.yyyy}");
+                Console.WriteLine($"Длительность: {camp.Days()} дней");
+                Console.WriteLine($"Статус: {camp.Status}");
+                Console.WriteLine($"Пожелания: {camp.Notes}");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\nЗаказ с ID {id} не найден.");
+                Console.ResetColor();
+            }
+
+            Console.WriteLine("\nНажмите любую клавишу...");
             Console.ReadKey();
         }
         private void DeleteCampain()

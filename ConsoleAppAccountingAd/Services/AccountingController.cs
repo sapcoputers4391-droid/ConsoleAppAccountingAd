@@ -21,18 +21,15 @@ namespace ConsoleAppAccountingAd.Services
             Clients.Add(client);
             Console.WriteLine("Клиент успешно добавлен!");
         }
-        public void RemoveClient(int id)
+        public bool DeleteClientWithOrders(int targetId)
         {
-            var client = Clients.Find(x => x.Id == id);
-            if (client != null)
-            {
-                Clients.Remove(client);
-                Console.WriteLine($"Клиент {id} успешно удален.");
-            }
-            else
-            {
-                Console.WriteLine("Клиент не найден.");
-            }
+            var client = Clients.FirstOrDefault(c => c.Id == targetId);
+
+            if (client == null) return false;
+            Campains.RemoveAll(c => c.ClientId == targetId);
+            Clients.Remove(client);
+
+            return true;
         }
         public Client GetClientById(int id)
         { 
@@ -83,18 +80,15 @@ namespace ConsoleAppAccountingAd.Services
             Platforms.Add(platform);
             Console.WriteLine("Рекламная площадка успешно добавлена!");
         }
-        public void RemoveAdPlaform(int id)
+        public bool DeletePlatformWithOrders(int targetId)
         {
-            var platform = Platforms.Find(y => y.Id == id);
-            if(platform != null)
-            {  
-                Platforms.Remove(platform);
-                Console.WriteLine($"Рекламная площадка {id} успешно удалена");
-            }
-            else
-            {
-                Console.WriteLine("Рекламная площадка не найдена");
-            }
+            var platform = Platforms.FirstOrDefault(p => p.Id == targetId);
+
+            if (platform == null) return false;
+            Campains.RemoveAll(c => c.PlatformId == targetId);
+            Platforms.Remove(platform);
+
+            return true;
         }
         public int GetNextPlatformId()
         {
